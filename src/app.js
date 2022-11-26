@@ -53,11 +53,13 @@ function runOpenBox(kode){
 		return false;
 	}else{ var i, d;
 		for(i = 0; i < DATA.length; i++){
-			if(DATA[i].kode === kode){
+			if(DATA[i].kode === kode.toLowerCase()){
+				var _internal = DATA[i].internal !=null? DATA[i].internal:false;
 				MysteryForm({
 					kode:kode,
 					misteri:DATA[i].misteri,
-					content:DATA[i].content
+					content:DATA[i].content,
+					internal:_internal
 				}).render("#MysteryBox"); 
 				d = true; break; 
 			}else{ d = false;}
@@ -83,8 +85,12 @@ function MysteryForm(data){
 		.onclick = function(){
 			var c = new Image();
 			c.crossOrigin = "anonymous";
-			c.src = "https://api.codetabs.com/v1/proxy?quest=" + img.src;
-			downloadImage(c.src,"Wallpaper.png");
+			if(data.internal){
+				c.src = img.src;
+			}else{
+				c.src = "https://api.codetabs.com/v1/proxy?quest=" + img.src;
+			}
+			downloadImage(c.src,"Wallpaper "+data.misteri+".png");
 		};
 		
 	};
@@ -92,7 +98,7 @@ function MysteryForm(data){
 	   "h1 Kode Misteri {{kode}}",
 	   "p ini adalah isi dari misteri box yang kamu dapatkan!",
 	   "h3 Wallpaper {{misteri}}",
-	   "img#contentDownload","br","a#dwn[download Wallpaper.jpg].btn.c2.medium <span.fa.fa-download> Download",
+	   "img#contentDownload","br","a#dwn[download Wallpaper.jpg|href #].btn.c2.medium <span.fa.fa-download> Download",
 	   "button#kem.btn.c2.medium <span.fa.fa-home> Kembali"],data);
 }
 function downloadImage(url, name){
