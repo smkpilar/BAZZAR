@@ -79,29 +79,20 @@ function MysteryForm(data){
 		};
 		var img = this._get("#contentDownload");
 		img.src = data.content;
-		this._get("#dwn")
-		.onclick = function(){
-			//convertBase64ToFile(getBase64Image(img),"Wallpaper "+data.misteri+".jpg");
-			//forceDownload(data.content,"Wallpaper.jpg");
-			var content = new Image();
-			content.src = img.src;
-			content.crossOrigin ="anonymous";
-			base64 = getBase64Image(content);
-			//window.location.href = base64;
-			forceDownload(base64,"Wallpaper.jpg");
-		}
+		this._get("#dwn").href = getBase64Image(data.content);
+		
 	};
 	return _([".center.c0",
 	   "h1 Kode Misteri {{kode}}",
 	   "p ini adalah isi dari misteri box yang kamu dapatkan!",
 	   "h3 Wallpaper {{misteri}}",
-	   "img#contentDownload","br","button#dwn[download].btn.c2.medium <span.fa.fa-download> Download",
+	   "img#contentDownload","br","a#dwn[download Wallpaper.jpg].btn.c2.medium <span.fa.fa-download> Download",
 	   "button#kem.btn.c2.medium <span.fa.fa-home> Kembali"],data);
 }
 function forceDownload(url, fileName) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
-    xhr.setRequestHeader('Access-Control-Allow-Origin', 'true');
+    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
     xhr.responseType = "blob";
     xhr.onload = function () {
         var urlCreator = window.URL || window.webkitURL;
