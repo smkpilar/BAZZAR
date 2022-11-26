@@ -137,6 +137,14 @@ a:hover{
     outline:none;
 }
 
+#contentDownload{
+    margin:8px;
+    border-radius: 8px;
+    width:320px;
+    height:600px;
+    object-fit: cover;
+}
+
 #foot{
     margin-top:3em;
 }
