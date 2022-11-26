@@ -79,7 +79,13 @@ function MysteryForm(data){
 		};
 		var img = this._get("#contentDownload");
 		img.src = data.content;
-		this._get("#dwn").href = getBase64Image(data.content);
+		this._get("#dwn")
+		.onclick = function(){
+			var c = new Image();
+			c.crossOrigin = "anonymous";
+			c.src = "https://api.codetabs.com/v1/proxy?quest=" + img.src;
+			downloadImage(c.src,"Wallpaper.png");
+		};
 		
 	};
 	return _([".center.c0",
@@ -89,45 +95,19 @@ function MysteryForm(data){
 	   "img#contentDownload","br","a#dwn[download Wallpaper.jpg].btn.c2.medium <span.fa.fa-download> Download",
 	   "button#kem.btn.c2.medium <span.fa.fa-home> Kembali"],data);
 }
-function forceDownload(url, fileName) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xhr.responseType = "blob";
-    xhr.onload = function () {
-        var urlCreator = window.URL || window.webkitURL;
-        var imageUrl = urlCreator.createObjectURL(this.response);
-        var tag = document.createElement('a');
-        tag.href = imageUrl;
-        tag.download = fileName;
-        document.body.appendChild(tag);
-        tag.click();
-        document.body.removeChild(tag);
-    }
-    xhr.send();
-}
-
-function getBase64Image(img) {
-	var canvas = document.createElement("canvas"),
-	content = new Image(); 
-	content.src = img.src;
-	content.crossOrigin = "anonymous";
-	canvas.width = img.width;
-	canvas.height = img.height;
-	var ctx = canvas.getContext("2d");
-	ctx.drawImage(content, 0, 0);
-	var dataURL = canvas.toDataURL("image/png");
-	return dataURL;
-}
-function convertBase64ToFile(base64String, fileName){
-	var arr = base64String.split(','),
-	 mime = arr[0].match(/:(.*?);/)[1],
-	 bstr = atob(arr[1]),
-	 n = bstr.length,
-	 uint8Array = new Uint8Array(n);
-	while (n--) {
-	   uint8Array[n] = bstr.charCodeAt(n);
-	}
-	file = new File([uint8Array], fileName, { type: mime });
-	return file;
+function downloadImage(url, name){
+	fetch(url)
+	  .then(resp => resp.blob())
+	  .then(blob => {
+		  const url = window.URL.createObjectURL(blob);
+		  const a = document.createElement('a');
+		  a.style.display = 'none';
+		  a.href = url;
+		  // the filename you want
+		  a.download = name;
+		  document.body.appendChild(a);
+		  a.click();
+		  window.URL.revokeObjectURL(url);
+	  })
+	  .catch(() => alert('An error sorry'));
 }
